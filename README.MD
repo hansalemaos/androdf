@@ -115,7 +115,7 @@ df_activities1.ee_aa_longtouch_offset_bs.iloc[28](200,1)  # x,y offset / recalcu
 ```
 
 ```python    
-df_activities1.ee_aa_touch_offset_bs.iloc[28](100,1) # x,y offset 
+df_activities1.ee_aa_touch_offset.iloc[28](100,1) # x,y offset 
 df_activities1.ee_aa_touch_offset_bs.iloc[28](100,1) # x,y offset / recalculated for bluestacks 
 ```
 
