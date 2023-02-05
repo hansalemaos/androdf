@@ -1,6 +1,7 @@
 import inspect
 import os
 import random
+import re
 import subprocess
 from copy import deepcopy
 from typing import Any, Union
@@ -236,19 +237,34 @@ def execute_adb_command(
 
 
 def get_screenwidth(adb_path, deviceserial):
-    screenwidth, screenheight = (
-        subprocess.run(
-            fr'{adb_path} -s {deviceserial} shell dumpsys window | grep cur= |tr -s " " | cut -d " " -f 4|cut -d "=" -f 2',
-            shell=True,
-            capture_output=True,
+    try:
+        screenwidth, screenheight = (
+            subprocess.run(
+                fr'{adb_path} -s {deviceserial} shell dumpsys window | grep cur= |tr -s " " | cut -d " " -f 4|cut -d "=" -f 2',
+                shell=True,
+                capture_output=True,
+            )
+            .stdout.decode("utf-8", "ignore")
+            .strip()
+            .split("x")
         )
-        .stdout.decode("utf-8", "ignore")
-        .strip()
-        .split("x")
-    )
-    screenwidth, screenheight = int(screenwidth), int(screenheight)
-    return screenwidth, screenheight
-
+        screenwidth, screenheight = int(screenwidth), int(screenheight)
+        return screenwidth, screenheight
+    except Exception:
+        vax = subprocess.run(f'{adb_path} -s {deviceserial} shell dumpsys display', capture_output=True, shell=True)
+        vax = vax.stdout.splitlines()
+        vaxre = re.compile(rb'mBaseDisplayInfo.*width=\b(\d+)\b.*height=\b(\d+)\b', flags=re.I)
+        scw, sch = 1280, 720
+        for v in vax:
+            fd = (vaxre.findall(v))
+            if fd:
+                try:
+                    print(v)
+                    scw, sch = int(fd[0][0]), int(fd[0][1])
+                    break
+                except Exception:
+                    continue
+        return scw, sch
 
 def dumpsys_to_df(adb_path, deviceserial):
     activ = execute_adb_command(
