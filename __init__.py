@@ -332,10 +332,10 @@ def get_detailed_info_sep(df):
         detailedinformationtogether[0].str.split(n=5, regex=False, expand=True).copy()
     )
     detailedinformationsep[1] = detailedinformationsep[1].apply(
-        lambda x: (x + "..........")[:9]
+        lambda x: (str(x).replace('None', '') + "..........")[:9]
     )
     detailedinformationsep[2] = detailedinformationsep[2].apply(
-        lambda x: (x + "..........")[:8]
+        lambda x: (str(x).replace('None', '') + "..........")[:8]
     )
 
     return detailedinformationsep
