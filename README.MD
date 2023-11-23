@@ -1,3 +1,7 @@
+# Use:
+# https://github.com/hansalemaos/usefuladb
+# https://github.com/hansalemaos/usefuladbplus
+
 # Locates more items/views/elements on an Android device than similar Android automation packages by combining ADB's dumpsys activity/uiautomator  
 
 
